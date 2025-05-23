@@ -13,7 +13,7 @@ interface FilterStore {
   setFilter: (filter: Partial<Filter>) => void;
 }
 
-export const useFilterStore = create<FilterStore>((set) => ({
+export const useFilter = create<FilterStore>((set) => ({
   filter: {
     project: "",
     type: "TABLE",

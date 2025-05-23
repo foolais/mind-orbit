@@ -9,6 +9,31 @@ interface CreateProjectData {
   description?: string;
 }
 
+export const getProjectsByUserId = async () => {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!session || !userId) {
+    return { error: true, message: "Unauthorized" };
+  }
+
+  try {
+    const projects = await prisma.project.findMany({
+      where: {
+        members: {
+          some: {
+            userId,
+          },
+        },
+      },
+    });
+    revalidatePath("/");
+    return projects;
+  } catch (error) {
+    return { error: true, message: error };
+  }
+};
+
 export const createProject = async (data: CreateProjectData) => {
   const session = await auth();
   const ownerId = session?.user?.id;

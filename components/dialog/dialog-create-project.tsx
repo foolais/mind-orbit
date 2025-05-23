@@ -48,7 +48,7 @@ export const DialogCreateProject = () => {
     <>
       <Button
         variant="outline"
-        className="w-full cursor-pointer bg-primary hover:bg-primary/80 text-white hover:text-white"
+        className="w-full cursor-pointer bg-primary hover:bg-primary/80 text-white hover:text-white my-2"
         onClick={() => setIsOpen(true)}
       >
         <FaPlus />

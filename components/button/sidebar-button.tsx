@@ -33,7 +33,7 @@ const SidebarButton = () => {
           <FaBars size={5} />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-40 ml-4 mt-1">
+      <DropdownMenuContent className="w-40 ml-4 translate-y-1">
         <DropdownMenuLabel>Menu</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
