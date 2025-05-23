@@ -68,6 +68,8 @@ model User {
   ProjectMember ProjectMember[]
   Task          Task[]
   Invitations   ProjectInvitation[]
+
+  @@map("user")
 }
 
 model Project {
@@ -83,6 +85,8 @@ model Project {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("project")
 }
 
 model ProjectMember {
@@ -97,6 +101,7 @@ model ProjectMember {
   createdAt DateTime @default(now())
 
   @@unique([userId, projectId])
+  @@map("projectmember")
 }
 
 model Task {
@@ -115,6 +120,8 @@ model Task {
   dueDate   DateTime?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+
+  @@map("task")
 }
 
 model ProjectInvitation {
@@ -131,4 +138,6 @@ model ProjectInvitation {
 
   createdAt DateTime @default(now())
   expiresAt DateTime
+
+  @@map("projectinvitation")
 }
