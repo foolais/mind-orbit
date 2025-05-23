@@ -2,59 +2,7 @@
 
 import { auth } from "@/auth";
 import { prisma } from "../prisma";
-
-export const getProjectByUserId = async (searchQuery: string) => {
-  const session = await auth();
-  if (!session) return { error: { auth: ["You must be logged in"] } };
-
-  const userId = session?.user?.id;
-
-  const [ownedProjects, memberProjects] = await prisma.$transaction([
-    prisma.project.findMany({
-      where: {
-        ownerId: userId,
-        name: {
-          contains: searchQuery,
-          mode: "insensitive",
-        },
-      },
-      include: {
-        members: true,
-        tasks: true,
-      },
-    }),
-    prisma.projectMember.findMany({
-      where: {
-        userId,
-        project: {
-          name: {
-            contains: searchQuery,
-            mode: "insensitive",
-          },
-        },
-      },
-      include: {
-        project: {
-          include: {
-            members: true,
-            tasks: true,
-          },
-        },
-      },
-    }),
-  ]);
-
-  const projectsAsMember = memberProjects.map((m) => m.project);
-
-  const allProjects = [
-    ...ownedProjects,
-    ...projectsAsMember.filter(
-      (proj) => !ownedProjects.some((p) => p.id === proj.id)
-    ),
-  ];
-
-  return allProjects;
-};
+import { revalidatePath } from "next/cache";
 
 interface CreateProjectData {
   name: string;
@@ -64,31 +12,40 @@ interface CreateProjectData {
 export const createProject = async (data: CreateProjectData) => {
   const session = await auth();
   const ownerId = session?.user?.id;
-  if (!session || !ownerId)
-    return { error: { auth: ["You must be logged in"] } };
+
+  if (!session || !ownerId) {
+    return { error: true, message: "Unauthorized" };
+  }
 
   const { name, description } = data;
 
   try {
-    const project = await prisma.project.create({
-      data: {
-        name,
-        description,
-        ownerId,
-        members: {
-          create: [
-            {
-              userId: ownerId,
-              role: "OWNER",
-            },
-          ],
+    await prisma.$transaction(async (prisma) => {
+      // Create the project
+      const project = await prisma.project.create({
+        data: {
+          name,
+          description,
+          ownerId,
         },
-      },
+      });
+
+      // Create the project member relationship
+      await prisma.projectMember.create({
+        data: {
+          userId: ownerId,
+          projectId: project.id,
+          role: "OWNER",
+        },
+      });
+
+      return project;
     });
 
-    return project;
+    revalidatePath("/");
+    return { succes: true, message: "Project created successfully" };
   } catch (error) {
-    console.log({ error });
-    return { error };
+    console.error("Error creating project:", error);
+    return { error: true, message: "Unauthorized" };
   }
 };

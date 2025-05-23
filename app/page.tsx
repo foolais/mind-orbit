@@ -16,6 +16,7 @@ const DashboardPage = async () => {
       </div>
       <div className="my-4">
         Dashboard Page
+        {session?.user?.id}
         {session?.user?.name}
         {session?.user?.email}
       </div>
