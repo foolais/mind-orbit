@@ -14,7 +14,7 @@ import { useEffect, useState, useTransition } from "react";
 import { getProjectsByUserId } from "@/lib/action/action-project";
 import { FaSpinner } from "react-icons/fa6";
 import { useFilter } from "@/store/useFilter";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export const SelectProject = () => {
   const [projectsData, setProjectsData] = useState<
@@ -23,6 +23,8 @@ export const SelectProject = () => {
   const [isPending, startTransition] = useTransition();
   const { filter, setFilter } = useFilter();
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -47,14 +49,37 @@ export const SelectProject = () => {
   }, []);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    params.set("project", filter.project);
-    if (filter.project === "") params.delete("project");
-    router.push(`${window.location.pathname}?${params}`);
-  }, [filter.project, router]);
+    const timer = setTimeout(() => {
+      const params = new URLSearchParams(searchParams);
+
+      if (filter.project === "") {
+        params.delete("project");
+      } else {
+        params.set("project", filter.project);
+      }
+
+      const newUrl = `${pathname}?${params.toString()}`;
+      if (newUrl !== `${pathname}?${searchParams.toString()}`) {
+        router.push(newUrl, { scroll: false });
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [filter.project, pathname, router, searchParams]);
+
+  useEffect(() => {
+    const projectParam = searchParams.get("project");
+    if (projectParam) {
+      setFilter({ project: projectParam });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <Select onValueChange={(value) => setFilter({ project: value })}>
+    <Select
+      value={filter.project}
+      onValueChange={(value) => setFilter({ project: value })}
+    >
       <SelectTrigger className="min-w-[200px] cursor-pointer ml-4">
         {isPending ? (
           <div className="flex items-center gap-2">
@@ -68,6 +93,7 @@ export const SelectProject = () => {
       <SelectContent>
         <SelectGroup>
           <SelectLabel>List Projects</SelectLabel>
+          {projectsData.length === 0 && <p>Empty projects</p>}
           {projectsData ? (
             projectsData.map((project) => (
               <SelectItem

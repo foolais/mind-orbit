@@ -35,8 +35,7 @@ export const DialogCreateProject = () => {
   const handleOnSubmit = (data: z.infer<typeof createProjectSchema>) => {
     try {
       startTransition(async () => {
-        const res = await createProject(data);
-        console.log({ res });
+        await createProject(data);
         setIsOpen(false);
       });
     } catch (error) {

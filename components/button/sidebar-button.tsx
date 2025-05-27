@@ -17,12 +17,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import Link from "next/link";
 
 const menuItems = [
-  { label: "Home", icon: FaHouse, link: "/" },
-  { label: "Task", icon: FaDiagramProject, link: "/task" },
-  { label: "Invitations", icon: FaUserPlus, link: "/invitations" },
-  { label: "Profile", icon: FaUser, link: "/profile" },
+  { label: "Home", icon: FaHouse, url: "/home" },
+  { label: "Task", icon: FaDiagramProject, url: "/task" },
+  { label: "Invitations", icon: FaUserPlus, url: "/invitations" },
+  { label: "Profile", icon: FaUser, url: "/profile" },
 ];
 
 const SidebarButton = () => {
@@ -38,10 +39,12 @@ const SidebarButton = () => {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           {menuItems.map((item) => (
-            <DropdownMenuItem key={item.label} className="cursor-pointer">
-              <item.icon size={5} />
-              {item.label}
-            </DropdownMenuItem>
+            <Link href={item.url} key={item.label}>
+              <DropdownMenuItem key={item.label} className="cursor-pointer">
+                <item.icon size={5} />
+                {item.label}
+              </DropdownMenuItem>
+            </Link>
           ))}
         </DropdownMenuGroup>
       </DropdownMenuContent>
