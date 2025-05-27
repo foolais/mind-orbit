@@ -12,6 +12,28 @@ interface CreateTask {
   dueDate: Date;
 }
 
+export const getTasksByProjectId = async (projectId: string) => {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!session || !userId) {
+    return { error: true, message: "Unauthorized" };
+  } else if (!projectId) {
+    return { error: true, message: "Select a project first" };
+  }
+
+  try {
+    const tasks = await prisma.task.findMany({
+      where: {
+        projectId,
+      },
+    });
+    return tasks;
+  } catch (error) {
+    return { error: true, message: error };
+  }
+};
+
 export const createTask = async (data: CreateTask, projectId: string) => {
   const session = await auth();
   const userId = session?.user?.id;

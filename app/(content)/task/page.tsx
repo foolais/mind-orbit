@@ -2,9 +2,25 @@ import DialogTask from "@/components/dialog/dialog-task";
 import TableTask from "@/components/table/table-task";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import React from "react";
+import { getTasksByProjectId } from "@/lib/action/action-task";
+import { Task } from "@prisma/client";
 
-const TaskPage = () => {
+interface TaskPageProps {
+  searchParams: { project?: string };
+}
+
+const TaskPage = async ({ searchParams }: TaskPageProps) => {
+  const { project } = await searchParams;
+  const result = (await getTasksByProjectId(project || "")) as Task[];
+
+  const groupedTasks = result?.reduce((acc, task) => {
+    if (!acc[task.status]) {
+      acc[task.status] = [];
+    }
+    acc[task.status].push(task);
+    return acc;
+  }, {} as Record<string, Task[]>);
+
   return (
     <div>
       <div className="grid items-center justify-between mb-4">
@@ -28,7 +44,7 @@ const TaskPage = () => {
           </Button>
           <div className="border border-dashed" />
           <TabsContent value="table">
-            <TableTask />
+            <TableTask groupedTasks={groupedTasks} />
           </TabsContent>
           <TabsContent value="kanban">Kanban</TabsContent>
         </Tabs>
