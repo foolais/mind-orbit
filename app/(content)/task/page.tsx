@@ -1,7 +1,7 @@
+import DialogTask from "@/components/dialog/dialog-create-task";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
-import { FaPlus } from "react-icons/fa6";
 
 const TaskPage = () => {
   return (
@@ -19,10 +19,7 @@ const TaskPage = () => {
               <TabsTrigger value="table">Table</TabsTrigger>
               <TabsTrigger value="kanban">Kanban</TabsTrigger>
             </TabsList>
-            <Button>
-              <FaPlus className="size-4" />
-              New Task
-            </Button>
+            <DialogTask type="CREATE" />
           </div>
           <div className="border border-dashed" />
           <Button variant="outline" className="my-1">
