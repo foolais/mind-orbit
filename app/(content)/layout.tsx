@@ -2,7 +2,7 @@ import SidebarButton from "@/components/button/sidebar-button";
 import SelectProject from "@/components/input/select-project";
 import UserAvatar from "@/components/ui/user-avatar";
 
-const ContentLayout = () => {
+const ContentLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="p-4">
       <div className="flex items-center justify-between">
@@ -13,6 +13,7 @@ const ContentLayout = () => {
         </div>
         <UserAvatar />
       </div>
+      <div className="py-4">{children}</div>
     </div>
   );
 };
