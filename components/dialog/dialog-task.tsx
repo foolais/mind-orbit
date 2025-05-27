@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { Button } from "../ui/button";
-import { FaPlus, FaSpinner } from "react-icons/fa6";
+import { FaCalendar, FaPlus, FaSpinner } from "react-icons/fa6";
 import DialogForm from "./dialog-form";
 import {
   Form,
@@ -28,10 +28,15 @@ import {
 import { PriorityOptions, StatusOptions } from "@/lib/data";
 import { createTask } from "@/lib/action/action-task";
 import Badge from "../ui/badge";
+import { Calendar } from "../ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { cn, formatDate } from "@/lib/utils";
+import { useFilter } from "@/store/useFilter";
 
 const DialogTask = ({ type = "CREATE" }: { type: "CREATE" | "UPDATe" }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const { filter } = useFilter();
 
   const form = useForm<z.infer<typeof taskSchema>>({
     resolver: zodResolver(taskSchema),
@@ -40,13 +45,14 @@ const DialogTask = ({ type = "CREATE" }: { type: "CREATE" | "UPDATe" }) => {
       description: "",
       status: "BACKLOG",
       priority: "LOW",
+      dueDate: new Date(),
     },
   });
 
   const handleOnSubmit = (data: z.infer<typeof taskSchema>) => {
     try {
       startTransition(async () => {
-        if (type === "CREATE") await createTask(data);
+        if (type === "CREATE") await createTask(data, filter.project);
         setIsOpen(false);
         form.reset();
       });
@@ -168,7 +174,45 @@ const DialogTask = ({ type = "CREATE" }: { type: "CREATE" | "UPDATe" }) => {
                 </FormItem>
               )}
             />
-
+            <FormField
+              control={form.control}
+              name="dueDate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Due Date</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full justify-start text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          <FaCalendar className="h-4 w-4 opacity-50" />
+                          {field.value ? (
+                            formatDate(new Date(field.value))
+                          ) : (
+                            <span>Select due date</span>
+                          )}
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) => date < new Date("2000-01-01")}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <Button
               type="submit"
               className="flex ml-auto cursor-pointer"

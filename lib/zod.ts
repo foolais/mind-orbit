@@ -16,4 +16,5 @@ export const taskSchema = z.object({
   description: z.string().optional(),
   priority: z.enum(["HIGH", "MEDIUM", "LOW"]),
   status: z.enum(["BACKLOG", "TODO", "INPROGRESS", "DONE"]),
+  dueDate: z.date({ required_error: "Due date is required" }),
 });
