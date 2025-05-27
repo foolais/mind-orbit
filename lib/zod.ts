@@ -18,3 +18,8 @@ export const taskSchema = z.object({
   status: z.enum(["BACKLOG", "TODO", "INPROGRESS", "DONE"]),
   dueDate: z.date({ required_error: "Due date is required" }),
 });
+
+export const filterSchema = z.object({
+  search: z.string().optional(),
+  priority: z.enum(["ALL", "HIGH", "MEDIUM", "LOW"]).optional(),
+});

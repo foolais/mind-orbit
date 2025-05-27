@@ -1,11 +1,10 @@
-import { TaskPriority, TaskStatus } from "@prisma/client";
+import { TaskPriority } from "@prisma/client";
 import { create } from "zustand";
 
 interface Filter {
   project: string;
-  type: "TABLE" | "KANBAN";
+  search: string;
   priority: "ALL" | TaskPriority;
-  status: "ALL" | TaskStatus;
 }
 
 interface FilterStore {
@@ -16,9 +15,8 @@ interface FilterStore {
 export const useFilter = create<FilterStore>((set) => ({
   filter: {
     project: "",
-    type: "TABLE",
+    search: "",
     priority: "ALL",
-    status: "ALL",
   },
   setFilter: (filter) =>
     set((state) => ({ filter: { ...state.filter, ...filter } })),

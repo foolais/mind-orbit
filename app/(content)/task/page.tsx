@@ -1,6 +1,6 @@
 import { CreateTaskButton } from "@/components/button/task-button";
+import FormFilter from "@/components/input/form-filter";
 import TableTask from "@/components/table/table-task";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getTasksByProjectId } from "@/lib/action/action-task";
 import { Task } from "@prisma/client";
@@ -13,13 +13,16 @@ const TaskPage = async ({ searchParams }: TaskPageProps) => {
   const { project } = await searchParams;
   const result = (await getTasksByProjectId(project || "")) as Task[];
 
-  const groupedTasks = result?.reduce((acc, task) => {
-    if (!acc[task.status]) {
-      acc[task.status] = [];
-    }
-    acc[task.status].push(task);
-    return acc;
-  }, {} as Record<string, Task[]>);
+  const groupedTasks =
+    result &&
+    result.length > 0 &&
+    result?.reduce((acc, task) => {
+      if (!acc[task.status]) {
+        acc[task.status] = [];
+      }
+      acc[task.status].push(task);
+      return acc;
+    }, {} as Record<string, Task[]>);
 
   return (
     <div>
@@ -39,12 +42,10 @@ const TaskPage = async ({ searchParams }: TaskPageProps) => {
             <CreateTaskButton />
           </div>
           <div className="border border-dashed" />
-          <Button variant="outline" className="my-1">
-            Filter
-          </Button>
+          <FormFilter />
           <div className="border border-dashed" />
           <TabsContent value="table">
-            <TableTask groupedTasks={groupedTasks} />
+            <TableTask groupedTasks={groupedTasks || {}} />
           </TabsContent>
           <TabsContent value="kanban">Kanban</TabsContent>
         </Tabs>

@@ -60,7 +60,7 @@ export const SelectProject = () => {
 
       const newUrl = `${pathname}?${params.toString()}`;
       if (newUrl !== `${pathname}?${searchParams.toString()}`) {
-        router.push(newUrl, { scroll: false });
+        router.push(newUrl);
       }
     }, 100);
 

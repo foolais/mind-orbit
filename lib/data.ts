@@ -1,10 +1,10 @@
 export const PriorityOptions = [
   {
-    value: "HIGH",
-    label: "HIGH",
-    color: "#EF4444",
-    bgColor: "bg-red-50",
-    textColor: "text-red-700",
+    value: "LOW",
+    label: "LOW",
+    color: "#10B981",
+    bgColor: "bg-emerald-50",
+    textColor: "text-emerald-700",
   },
   {
     value: "MEDIUM",
@@ -14,11 +14,11 @@ export const PriorityOptions = [
     textColor: "text-amber-700",
   },
   {
-    value: "LOW",
-    label: "LOW",
-    color: "#10B981",
-    bgColor: "bg-emerald-50",
-    textColor: "text-emerald-700",
+    value: "HIGH",
+    label: "HIGH",
+    color: "#EF4444",
+    bgColor: "bg-red-50",
+    textColor: "text-red-700",
   },
 ];
 
