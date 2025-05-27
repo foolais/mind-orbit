@@ -3,6 +3,7 @@
 import { auth } from "@/auth";
 import { prisma } from "../prisma";
 import { revalidatePath } from "next/cache";
+import { Prisma, TaskPriority } from "@prisma/client";
 
 interface CreateTask {
   title: string;
@@ -12,7 +13,11 @@ interface CreateTask {
   dueDate: Date;
 }
 
-export const getTasksByProjectId = async (projectId: string) => {
+export const getTasksByProjectId = async (
+  projectId: string,
+  search?: string,
+  priority?: TaskPriority | "ALL"
+) => {
   const session = await auth();
   const userId = session?.user?.id;
 
@@ -22,12 +27,23 @@ export const getTasksByProjectId = async (projectId: string) => {
     return { error: true, message: "Select a project first" };
   }
 
+  const where: Prisma.TaskWhereInput = {
+    projectId,
+  };
+
+  if (search) {
+    where.OR = [
+      { title: { contains: search, mode: "insensitive" } },
+      { description: { contains: search, mode: "insensitive" } },
+    ];
+  }
+
+  if (priority !== "ALL") {
+    where.priority = priority;
+  }
+
   try {
-    const tasks = await prisma.task.findMany({
-      where: {
-        projectId,
-      },
-    });
+    const tasks = await prisma.task.findMany({ where });
     return tasks;
   } catch (error) {
     return { error: true, message: error };

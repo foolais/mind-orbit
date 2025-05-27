@@ -33,8 +33,12 @@ const FormFilter = () => {
     defaultValues: {
       search: searchParams.get("search") || "",
       priority:
-        searchParams.get("priority") !== null
-          ? (searchParams.get("priority") as "ALL" | "HIGH" | "MEDIUM" | "LOW")
+        searchParams.get("priority") !== null || undefined
+          ? (searchParams.get("priority")?.toUpperCase() as
+              | "ALL"
+              | "HIGH"
+              | "MEDIUM"
+              | "LOW")
           : "ALL",
     },
   });
@@ -52,7 +56,7 @@ const FormFilter = () => {
 
       Object.entries(paramUpdates).forEach(([key, value]) => {
         if (value !== undefined) {
-          params.set(key, value);
+          params.set(key, value.toLocaleLowerCase());
         } else {
           params.delete(key);
         }
@@ -68,7 +72,7 @@ const FormFilter = () => {
   return (
     <Form {...form}>
       <form
-        className="flex gap-2 md:gap-4 md:max-w-2xl"
+        className="flex gap-2 md:gap-4 md:max-w-3xl"
         onSubmit={form.handleSubmit(handleOnSubmit)}
       >
         <FormField

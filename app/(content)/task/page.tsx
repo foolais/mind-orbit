@@ -3,15 +3,21 @@ import FormFilter from "@/components/input/form-filter";
 import TableTask from "@/components/table/table-task";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getTasksByProjectId } from "@/lib/action/action-task";
-import { Task } from "@prisma/client";
+import { Task, TaskPriority } from "@prisma/client";
 
 interface TaskPageProps {
-  searchParams: { project?: string };
+  searchParams: { project?: string; search?: string; priority?: string };
 }
 
 const TaskPage = async ({ searchParams }: TaskPageProps) => {
-  const { project } = await searchParams;
-  const result = (await getTasksByProjectId(project || "")) as Task[];
+  const { project, search, priority } = await searchParams;
+  const result = (await getTasksByProjectId(
+    project || "",
+    search,
+    priority && ["HIGH", "MEDIUM", "LOW"].includes(priority)
+      ? (priority as TaskPriority)
+      : "ALL"
+  )) as Task[];
 
   const groupedTasks =
     result &&
