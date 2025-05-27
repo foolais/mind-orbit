@@ -62,3 +62,34 @@ export const createTask = async (data: CreateTask, projectId: string) => {
     return { error: true, message: error };
   }
 };
+
+export const updateTask = async (data: CreateTask, taskId: string) => {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!session || !userId) {
+    return { error: true, message: "Unauthorized" };
+  } else if (!taskId) {
+    return { error: true, message: "Select a project first" };
+  }
+
+  const { title, description, priority, status, dueDate } = data;
+
+  try {
+    await prisma.task.update({
+      where: {
+        id: taskId,
+      },
+      data: {
+        title,
+        description,
+        priority,
+        status,
+        dueDate,
+      },
+    });
+    revalidatePath("/task");
+  } catch (error) {
+    return { error: true, message: error };
+  }
+};

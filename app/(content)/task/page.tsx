@@ -1,4 +1,4 @@
-import DialogTask from "@/components/dialog/dialog-task";
+import { CreateTaskButton } from "@/components/button/task-button";
 import TableTask from "@/components/table/table-task";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -36,7 +36,7 @@ const TaskPage = async ({ searchParams }: TaskPageProps) => {
               <TabsTrigger value="table">Table</TabsTrigger>
               <TabsTrigger value="kanban">Kanban</TabsTrigger>
             </TabsList>
-            <DialogTask type="CREATE" />
+            <CreateTaskButton />
           </div>
           <div className="border border-dashed" />
           <Button variant="outline" className="my-1">
