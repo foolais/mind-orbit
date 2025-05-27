@@ -6,9 +6,9 @@ const ContentLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="p-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <SidebarButton />
-          <h1 className="text-2xl font-semibold">Mind Orbit</h1>
+          <h1 className="text-xl sm:text-2xl font-semibold">Mind Orbit</h1>
           <SelectProject />
         </div>
         <UserAvatar />

@@ -80,7 +80,7 @@ export const SelectProject = () => {
       value={filter.project}
       onValueChange={(value) => setFilter({ project: value })}
     >
-      <SelectTrigger className="min-w-[200px] cursor-pointer ml-4">
+      <SelectTrigger className="min-w-[150px] sm:min-w-[200px] cursor-pointer sm:ml-4">
         {isPending ? (
           <div className="flex items-center gap-2">
             <FaSpinner className="h-4 w-4 animate-spin" />
