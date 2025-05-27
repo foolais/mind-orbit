@@ -1,4 +1,5 @@
-import DialogTask from "@/components/dialog/dialog-create-task";
+import DialogTask from "@/components/dialog/dialog-task";
+import TableTask from "@/components/table/table-task";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import React from "react";
@@ -7,7 +8,7 @@ const TaskPage = () => {
   return (
     <div>
       <div className="grid items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold tracking-wide">Task</h2>
+        <h2 className="text-xl font-semibold tracking-wide">My Task</h2>
         <span className="text-muted-foreground text-sm">
           View all of your tasks here
         </span>
@@ -26,7 +27,9 @@ const TaskPage = () => {
             Filter
           </Button>
           <div className="border border-dashed" />
-          <TabsContent value="table">Table</TabsContent>
+          <TabsContent value="table">
+            <TableTask />
+          </TabsContent>
           <TabsContent value="kanban">Kanban</TabsContent>
         </Tabs>
       </div>

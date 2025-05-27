@@ -1,3 +1,5 @@
+"use server";
+
 interface CreateTask {
   title: string;
   description?: string;
