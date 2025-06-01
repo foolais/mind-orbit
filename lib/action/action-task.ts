@@ -134,3 +134,25 @@ export const updateStatusTask = async (taskId: string, status: TaskStatus) => {
     return { error: true, message: error };
   }
 };
+
+export const deleteTask = async (taskId: string) => {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!session || !userId) {
+    return { error: true, message: "Unauthorized" };
+  } else if (!taskId) {
+    return { error: true, message: "Select a task first" };
+  }
+
+  try {
+    await prisma.task.delete({
+      where: {
+        id: taskId,
+      },
+    });
+    revalidatePath("/task");
+  } catch (error) {
+    return { error: true, message: error };
+  }
+};

@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
+import DeleteButton from "../button/delete-button";
 
 interface DialogFormProps {
   isOpen: boolean;
@@ -12,6 +13,9 @@ interface DialogFormProps {
   title: string;
   description: string;
   children: React.ReactNode;
+  canDelete?: boolean;
+  onDelete?: () => void;
+  text?: string;
 }
 
 const DialogForm = ({
@@ -20,6 +24,9 @@ const DialogForm = ({
   title,
   description,
   children,
+  canDelete = false,
+  onDelete = () => {},
+  text,
 }: DialogFormProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -30,7 +37,12 @@ const DialogForm = ({
         }}
       >
         <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
+          <DialogTitle className="flex items-center gap-3">
+            {title}
+            {canDelete && text && (
+              <DeleteButton onDelete={onDelete} text={text} />
+            )}
+          </DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         {children}

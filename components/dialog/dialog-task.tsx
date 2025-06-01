@@ -26,7 +26,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { PriorityOptions, StatusOptions } from "@/lib/data";
-import { createTask, updateTask } from "@/lib/action/action-task";
+import { createTask, deleteTask, updateTask } from "@/lib/action/action-task";
 import Badge from "../ui/badge";
 import { Calendar } from "../ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -74,6 +74,11 @@ const DialogTask = ({
     }
   };
 
+  const handleDeleteTask = async () => {
+    await deleteTask(task?.id ?? "");
+    onClose();
+  };
+
   useEffect(() => {
     if (task && type === "UPDATE") {
       form.reset({
@@ -98,6 +103,9 @@ const DialogTask = ({
           ? "Create a new task and assign it to a project."
           : `Task created on ${formatDate(task?.createdAt ?? new Date())}`
       }
+      canDelete
+      onDelete={handleDeleteTask}
+      text={`Task: ${task?.title ?? ""}`}
     >
       <Form {...form}>
         <form
