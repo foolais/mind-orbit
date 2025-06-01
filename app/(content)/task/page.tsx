@@ -16,7 +16,7 @@ const TaskPage = async ({ searchParams }: TaskPageProps) => {
   const result = (await getTasksByProjectId(
     project || "",
     search,
-    priority && ["HIGH", "MEDIUM", "LOW"].includes(priority)
+    priority && ["HIGH", "MEDIUM", "LOW"].includes(priority.toUpperCase())
       ? (priority as TaskPriority)
       : "ALL"
   )) as Task[];

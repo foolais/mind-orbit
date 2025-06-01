@@ -38,8 +38,8 @@ export const getTasksByProjectId = async (
     ];
   }
 
-  if (priority !== "ALL") {
-    where.priority = priority;
+  if (priority?.toUpperCase() !== "ALL") {
+    where.priority = priority?.toUpperCase() as TaskPriority;
   }
 
   try {
