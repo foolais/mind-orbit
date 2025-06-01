@@ -1,5 +1,4 @@
 import { auth } from "@/auth";
-import React from "react";
 import { Avatar, AvatarFallback } from "./avatar";
 import Image from "next/image";
 

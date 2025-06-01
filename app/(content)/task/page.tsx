@@ -33,7 +33,7 @@ const TaskPage = async ({ searchParams }: TaskPageProps) => {
     }, {} as Record<string, Task[]>);
 
   return (
-    <div>
+    <div className="pb-20">
       <div className="grid items-center justify-between mb-4">
         <h2 className="text-xl font-semibold tracking-wide">My Task</h2>
         <span className="text-muted-foreground text-sm">

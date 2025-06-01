@@ -46,7 +46,6 @@ export const createProject = async (data: CreateProjectData) => {
 
   try {
     await prisma.$transaction(async (prisma) => {
-      // Create the project
       const project = await prisma.project.create({
         data: {
           name,
@@ -55,7 +54,6 @@ export const createProject = async (data: CreateProjectData) => {
         },
       });
 
-      // Create the project member relationship
       await prisma.projectMember.create({
         data: {
           userId: ownerId,

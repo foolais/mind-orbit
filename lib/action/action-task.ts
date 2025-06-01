@@ -3,7 +3,7 @@
 import { auth } from "@/auth";
 import { prisma } from "../prisma";
 import { revalidatePath } from "next/cache";
-import { Prisma, TaskPriority } from "@prisma/client";
+import { Prisma, TaskPriority, TaskStatus } from "@prisma/client";
 
 interface CreateTask {
   title: string;
@@ -86,7 +86,7 @@ export const updateTask = async (data: CreateTask, taskId: string) => {
   if (!session || !userId) {
     return { error: true, message: "Unauthorized" };
   } else if (!taskId) {
-    return { error: true, message: "Select a project first" };
+    return { error: true, message: "Select a task first" };
   }
 
   const { title, description, priority, status, dueDate } = data;
@@ -102,6 +102,31 @@ export const updateTask = async (data: CreateTask, taskId: string) => {
         priority,
         status,
         dueDate,
+      },
+    });
+    revalidatePath("/task");
+  } catch (error) {
+    return { error: true, message: error };
+  }
+};
+
+export const updateStatusTask = async (taskId: string, status: TaskStatus) => {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!session || !userId) {
+    return { error: true, message: "Unauthorized" };
+  } else if (!taskId) {
+    return { error: true, message: "Select a task first" };
+  }
+
+  try {
+    await prisma.task.update({
+      where: {
+        id: taskId,
+      },
+      data: {
+        status,
       },
     });
     revalidatePath("/task");

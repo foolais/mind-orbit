@@ -120,3 +120,20 @@
     @apply bg-background text-foreground;
   }
 }
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+[data-dnd-kit-droppable] {
+  position: relative;
+  z-index: 1;
+}
+
+[data-radix-accordion-content] {
+  overflow: visible !important;
+}
+
+.accordion-content {
+  contain: none !important;
+}
