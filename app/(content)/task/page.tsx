@@ -1,6 +1,7 @@
 import AlertSelectProjectButton from "@/components/button/alert-select-project-button";
 import { CreateTaskButton } from "@/components/button/task-button";
 import FormFilter from "@/components/input/form-filter";
+import KanbanTask from "@/components/table/kanban-task";
 import TableTask from "@/components/table/table-task";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getTasksByProjectId } from "@/lib/action/action-task";
@@ -57,7 +58,9 @@ const TaskPage = async ({ searchParams }: TaskPageProps) => {
             <TabsContent value="table">
               <TableTask groupedTasks={groupedTasks || {}} />
             </TabsContent>
-            <TabsContent value="kanban">Kanban</TabsContent>
+            <TabsContent value="kanban">
+              <KanbanTask groupedTasks={groupedTasks || {}} />
+            </TabsContent>
           </Tabs>
         </div>
       )}

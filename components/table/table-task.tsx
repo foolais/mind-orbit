@@ -36,7 +36,7 @@ const TableTask = ({ groupedTasks }: TableTaskProps) => {
             <AccordionItem
               key={status.value}
               value={status.value}
-              className="pb-4"
+              className="pb-4 last:border-b-0"
             >
               <AccordionTrigger className="px-4 hover:no-underline flex items-center cursor-pointer">
                 <div className="flex items-center gap-3 w-full">
