@@ -66,15 +66,16 @@ const HomePage = async ({ searchParams }: HomePageProps) => {
           <div className="border border-dashed mb-4 mt-2" />
           <div>
             <span className="font-semibold">List Members:</span>
-            {data?.members?.map((member) => (
-              <div
-                key={member.id}
-                className="flex items-center gap-2 bg-muted p-2 rounded-md my-2 w-max capitalize"
-              >
-                <div className="size-4 bg-primary rounded-full" />
-                <h3 className="text-sm">{member.user.name}</h3>
-              </div>
-            ))}
+            {data?.members &&
+              data?.members?.map((member) => (
+                <div
+                  key={member.id}
+                  className="flex items-center gap-2 bg-muted p-2 rounded-md my-2 w-max capitalize"
+                >
+                  <div className="size-4 bg-primary rounded-full" />
+                  <h3 className="text-sm">{member.user.name}</h3>
+                </div>
+              ))}
           </div>
           <div className="border border-dashed my-4" />
           <div>

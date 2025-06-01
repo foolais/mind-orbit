@@ -43,7 +43,10 @@ export const getTasksByProjectId = async (
   }
 
   try {
-    const tasks = await prisma.task.findMany({ where });
+    const tasks = await prisma.task.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+    });
     return tasks;
   } catch (error) {
     return { error: true, message: error };

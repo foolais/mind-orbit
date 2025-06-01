@@ -1,6 +1,7 @@
 import { signIn } from "@/auth";
 import { Button } from "../ui/button";
-import { FaGoogle } from "react-icons/fa6";
+import Google from "@/public/google.svg";
+import Image from "next/image";
 
 const GoogleButton = () => {
   return (
@@ -12,7 +13,7 @@ const GoogleButton = () => {
         await signIn("google", { redirectTo: "/home" });
       }}
     >
-      <FaGoogle className="size-5" />
+      <Image src={Google} alt="Google" width={24} height={24} />
       <span className="font-medium">Sign in with Google</span>
     </Button>
   );
