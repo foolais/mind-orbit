@@ -9,6 +9,50 @@ interface CreateProjectData {
   description?: string;
 }
 
+export const getProjectById = async (projectId: string) => {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!session || !userId) {
+    return { error: true, message: "Unauthorized" };
+  }
+
+  try {
+    const data = await prisma.project.findFirst({
+      where: { id: projectId },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        members: {
+          select: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+        tasks: {
+          orderBy: { createdAt: "desc" },
+          select: {
+            id: true,
+            title: true,
+            priority: true,
+            status: true,
+            dueDate: true,
+          },
+          take: 5,
+        },
+      },
+    });
+    return data;
+  } catch (error) {
+    return { error: true, message: error };
+  }
+};
+
 export const getProjectsByUserId = async () => {
   const session = await auth();
   const userId = session?.user?.id;

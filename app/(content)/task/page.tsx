@@ -44,7 +44,7 @@ const TaskPage = async ({ searchParams }: TaskPageProps) => {
         <AlertSelectProjectButton />
       ) : (
         <div className="border p-4 rounded-sm">
-          <Tabs defaultValue="table">
+          <Tabs defaultValue="kanban">
             <div className="flex items-center justify-between mb-2">
               <TabsList className="w-[200px] sm:w-[300px]">
                 <TabsTrigger value="table">Table</TabsTrigger>
