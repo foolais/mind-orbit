@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "../ui/button";
 import {
   FaHouse,
@@ -18,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import Link from "next/link";
+import LogoutButton from "./logout-button";
 
 const menuItems = [
   { label: "Home", icon: FaHouse, url: "/home" },
@@ -40,12 +40,14 @@ const SidebarButton = () => {
         <DropdownMenuGroup>
           {menuItems.map((item) => (
             <Link href={item.url} key={item.label}>
-              <DropdownMenuItem key={item.label} className="cursor-pointer">
+              <DropdownMenuItem key={item.label} className="cursor-pointer ">
                 <item.icon size={5} />
                 {item.label}
               </DropdownMenuItem>
             </Link>
           ))}
+          <DropdownMenuSeparator />
+          <LogoutButton />
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

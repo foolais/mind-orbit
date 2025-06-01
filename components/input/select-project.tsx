@@ -93,8 +93,10 @@ export const SelectProject = () => {
       <SelectContent>
         <SelectGroup>
           <SelectLabel>List Projects</SelectLabel>
-          {projectsData.length === 0 && <p>Empty projects</p>}
-          {projectsData ? (
+          {projectsData.length === 0 && (
+            <p className="text-sm px-2">Empty projects</p>
+          )}
+          {projectsData &&
             projectsData.map((project) => (
               <SelectItem
                 key={project.value}
@@ -104,10 +106,7 @@ export const SelectProject = () => {
                 <span className="size-3.5 bg-primary rounded-full" />
                 {project.label}
               </SelectItem>
-            ))
-          ) : (
-            <p>Empty projects</p>
-          )}
+            ))}
           {projectsData.length <= 5 && <DialogCreateProject />}
         </SelectGroup>
       </SelectContent>
