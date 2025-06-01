@@ -1,3 +1,4 @@
+import AlertSelectProjectButton from "@/components/button/alert-select-project-button";
 import { CreateTaskButton } from "@/components/button/task-button";
 import FormFilter from "@/components/input/form-filter";
 import TableTask from "@/components/table/table-task";
@@ -38,24 +39,28 @@ const TaskPage = async ({ searchParams }: TaskPageProps) => {
           View all of your tasks here
         </span>
       </div>
-      <div className="border p-4 rounded-sm">
-        <Tabs defaultValue="table">
-          <div className="flex items-center justify-between mb-2">
-            <TabsList className="w-[200px] sm:w-[300px]">
-              <TabsTrigger value="table">Table</TabsTrigger>
-              <TabsTrigger value="kanban">Kanban</TabsTrigger>
-            </TabsList>
-            <CreateTaskButton />
-          </div>
-          <div className="border border-dashed" />
-          <FormFilter />
-          <div className="border border-dashed" />
-          <TabsContent value="table">
-            <TableTask groupedTasks={groupedTasks || {}} />
-          </TabsContent>
-          <TabsContent value="kanban">Kanban</TabsContent>
-        </Tabs>
-      </div>
+      {!project ? (
+        <AlertSelectProjectButton />
+      ) : (
+        <div className="border p-4 rounded-sm">
+          <Tabs defaultValue="table">
+            <div className="flex items-center justify-between mb-2">
+              <TabsList className="w-[200px] sm:w-[300px]">
+                <TabsTrigger value="table">Table</TabsTrigger>
+                <TabsTrigger value="kanban">Kanban</TabsTrigger>
+              </TabsList>
+              <CreateTaskButton />
+            </div>
+            <div className="border border-dashed" />
+            <FormFilter />
+            <div className="border border-dashed" />
+            <TabsContent value="table">
+              <TableTask groupedTasks={groupedTasks || {}} />
+            </TabsContent>
+            <TabsContent value="kanban">Kanban</TabsContent>
+          </Tabs>
+        </div>
+      )}
     </div>
   );
 };
