@@ -29,11 +29,7 @@ const TableTask = ({ groupedTasks }: TableTaskProps) => {
 
   return (
     <>
-      <Accordion
-        type="multiple"
-        className="w-full"
-        defaultValue={StatusOptions.map((s) => s.value)}
-      >
+      <Accordion type="multiple" className="w-full" defaultValue={["TODO"]}>
         {StatusOptions.map((status) => {
           const tasks = groupedTasks[status.value] || [];
           return (

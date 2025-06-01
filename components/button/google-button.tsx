@@ -9,7 +9,7 @@ const GoogleButton = () => {
       variant={"outline"}
       onClick={async () => {
         "use server";
-        await signIn("google", { redirectTo: "/" });
+        await signIn("google", { redirectTo: "/home" });
       }}
     >
       <FaGoogle className="size-5" />

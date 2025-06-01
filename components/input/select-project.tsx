@@ -108,8 +108,7 @@ export const SelectProject = () => {
           ) : (
             <p>Empty projects</p>
           )}
-
-          <DialogCreateProject />
+          {projectsData.length <= 5 && <DialogCreateProject />}
         </SelectGroup>
       </SelectContent>
     </Select>

@@ -27,7 +27,7 @@ export const getProjectsByUserId = async () => {
         },
       },
     });
-    revalidatePath("/");
+    revalidatePath("/home");
     return projects;
   } catch (error) {
     return { error: true, message: error };
