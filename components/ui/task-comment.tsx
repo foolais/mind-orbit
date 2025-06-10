@@ -142,9 +142,11 @@ const TaskComment = ({ taskId }: CommentProps) => {
                       {moment(comment.createdAt).format("LLL")}
                     </p>
                   </div>
-                  <p className="relative text-sm bg-slate-200 p-2 rounded-md w-max before:content-[''] before:absolute before:top-0.5 before:left-2 before:border-8 before:border-transparent before:border-b-slate-200 before:-translate-y-full">
-                    {comment.content}
-                  </p>
+                  <div className="w-max max-w-[300px] md:max-w-[450px]">
+                    <p className="relative text-sm bg-slate-200 p-2 rounded-md w-full min-w-[3rem] min-h-[2.5rem] before:content-[''] before:absolute before:top-0 before:left-2 before:border-8 before:border-transparent before:border-b-slate-200 before:-translate-y-full break-words whitespace-pre-wrap">
+                      {comment.content}
+                    </p>
+                  </div>
                 </div>
               ))
             ) : (
