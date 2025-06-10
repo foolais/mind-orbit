@@ -139,13 +139,16 @@ const TaskComment = ({ taskId }: CommentProps) => {
                       )}
                     </div>
                     <p className="text-sm text-muted-foreground capitalize text-center">
-                      {moment(comment.createdAt).format("LLL")}
+                      {moment(comment.createdAt).format("DD/MM/YYYY")}
                     </p>
                   </div>
                   <div className="w-max max-w-[300px] md:max-w-[450px]">
-                    <p className="relative text-sm bg-slate-200 p-2 rounded-md w-full min-w-[3rem] min-h-[2.5rem] before:content-[''] before:absolute before:top-0 before:left-2 before:border-8 before:border-transparent before:border-b-slate-200 before:-translate-y-full break-words whitespace-pre-wrap">
-                      {comment.content}
-                    </p>
+                    <div className="relative text-sm bg-slate-200 p-2 rounded-md w-full min-w-[3rem] min-h-[2.5rem] before:content-[''] before:absolute before:top-0 before:left-2 before:border-8 before:border-transparent before:border-b-slate-200 before:-translate-y-full break-words whitespace-pre-wrap pb-6">
+                      <span>{comment.content}</span>
+                      <span className="text-xs text-muted-foreground absolute bottom-2 right-2">
+                        {moment(comment.createdAt).format("HH:mm")}
+                      </span>
+                    </div>
                   </div>
                 </div>
               ))
