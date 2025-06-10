@@ -13,7 +13,11 @@ import { Avatar, AvatarFallback } from "./avatar";
 import Image from "next/image";
 import DeleteButton from "../button/delete-button";
 import { useEffect, useState, useTransition } from "react";
-import { createComment, getCommentsByTask } from "@/lib/action/action-comment";
+import {
+  createComment,
+  deleteComment,
+  getCommentsByTask,
+} from "@/lib/action/action-comment";
 import { Comment } from "@prisma/client";
 import moment from "moment";
 
@@ -48,7 +52,6 @@ const TaskComment = ({ taskId }: CommentProps) => {
     try {
       const comments = await getCommentsByTask(taskId || "");
 
-      console.log({ comments });
       if (Array.isArray(comments)) {
         setData(comments);
         form.reset({ comment: "" });
@@ -74,55 +77,85 @@ const TaskComment = ({ taskId }: CommentProps) => {
     }
   };
 
+  const handleDeleteComment = (commentId: string) => {
+    try {
+      startTransition(async () => {
+        const res = await deleteComment(commentId);
+        if (res.success) await fetchComments();
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       await fetchComments();
       form.reset({ comment: "" });
     };
 
-    fetchData();
+    startTransition(fetchData);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [taskId, form]);
 
   return (
     <div>
-      <div className="h-[400px] overflow-y-scroll p-2">
-        {data &&
-          data.length > 0 &&
-          data.map((comment) => (
-            <div key={comment.id} className="mb-4">
-              <div className="flex items-center gap-2 mb-3">
-                <Avatar>
-                  <Image
-                    src={comment?.author?.image || ""}
-                    alt="Avatar"
-                    width={32}
-                    height={32}
-                    className="rounded-full"
-                  />
+      <div className="h-[380px] overflow-y-scroll p-2">
+        {isPending ? (
+          <div className="flex items-center justify-center mt-20">
+            <FaSpinner className="text-primary size-8 animate-spin" />
+          </div>
+        ) : (
+          <>
+            {data && data.length > 0 ? (
+              data.map((comment) => (
+                <div key={comment.id} className="mb-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Avatar>
+                      <Image
+                        src={comment?.author?.image || ""}
+                        alt="Avatar"
+                        width={32}
+                        height={32}
+                        className="rounded-full"
+                      />
 
-                  <AvatarFallback>M</AvatarFallback>
-                </Avatar>
-                <div className="w-full flex items-center gap-4">
-                  <p className="text-sm text-gray-900 capitalize">
-                    {comment?.authorId === session?.user.id
-                      ? "You"
-                      : comment?.author?.name}
+                      <AvatarFallback>M</AvatarFallback>
+                    </Avatar>
+                    <div className="w-full flex items-center gap-4">
+                      <p className="text-sm text-gray-900 capitalize">
+                        {comment?.authorId === session?.user.id
+                          ? "You"
+                          : comment?.author?.name}
+                      </p>
+                      {comment?.authorId === session?.user.id && (
+                        <DeleteButton
+                          onDelete={() => {
+                            handleDeleteComment(comment.id);
+                          }}
+                          text=""
+                        />
+                      )}
+                    </div>
+                    <p className="text-sm text-muted-foreground capitalize text-center">
+                      {moment(comment.createdAt).format("LLL")}
+                    </p>
+                  </div>
+                  <p className="relative text-sm bg-slate-200 p-2 rounded-md w-max before:content-[''] before:absolute before:top-0.5 before:left-2 before:border-8 before:border-transparent before:border-b-slate-200 before:-translate-y-full">
+                    {comment.content}
                   </p>
-                  <DeleteButton onDelete={() => {}} text="" />
                 </div>
-                <p className="text-sm text-muted-foreground capitalize text-center">
-                  {moment(comment.createdAt).format("LLL")}
-                </p>
+              ))
+            ) : (
+              <div className="flex items-center justify-center mt-20">
+                <p className="text-sm text-muted-foreground">No comments yet</p>
               </div>
-              <p className="relative text-sm bg-slate-200 p-2 rounded-md w-max before:content-[''] before:absolute before:top-0.5 before:left-2 before:border-8 before:border-transparent before:border-b-slate-200 before:-translate-y-full">
-                {comment.content}
-              </p>
-            </div>
-          ))}
+            )}
+          </>
+        )}
       </div>
-      <div className="w-full flex gap-2">
+      <div className="w-full flex gap-2 pt-4 border-t">
         <Avatar>
           <Image
             src={session?.user.image || ""}
@@ -157,7 +190,7 @@ const TaskComment = ({ taskId }: CommentProps) => {
             />
             <Button type="submit" disabled={isPending}>
               {isPending ? (
-                <FaSpinner className="ml-2 h-4 w-4 animate-spin" />
+                <FaSpinner className="size-4 animate-spin" />
               ) : (
                 <FaRegPaperPlane />
               )}

@@ -63,3 +63,16 @@ export const createComment = async (data: CreateComment) => {
     return { error: true, message: error };
   }
 };
+
+export const deleteComment = async (commentId: string) => {
+  try {
+    await prisma.comment.delete({
+      where: {
+        id: commentId,
+      },
+    });
+    return { success: true, message: "Comment deleted" };
+  } catch (error) {
+    return { error: true, message: error };
+  }
+};
