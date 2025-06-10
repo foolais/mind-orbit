@@ -34,7 +34,7 @@ import { cn, formatDate } from "@/lib/utils";
 import { useFilter } from "@/store/useFilter";
 import { Task } from "@prisma/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import Comment from "../ui/comment";
+import TaskComment from "../ui/task-comment";
 
 interface DialogTaskProps {
   task?: Task;
@@ -270,7 +270,7 @@ const DialogTask = ({
           </Form>
         </TabsContent>
         <TabsContent value="comment" className="p-0">
-          <Comment />
+          <TaskComment taskId={task?.id} />
         </TabsContent>
       </Tabs>
     </DialogForm>

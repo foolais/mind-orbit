@@ -1,0 +1,172 @@
+"use client";
+
+import { commentSchema } from "@/lib/zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "./form";
+import { Textarea } from "./textarea";
+import { Button } from "./button";
+import { FaRegPaperPlane, FaSpinner } from "react-icons/fa6";
+import { useSession } from "next-auth/react";
+import { Avatar, AvatarFallback } from "./avatar";
+import Image from "next/image";
+import DeleteButton from "../button/delete-button";
+import { useEffect, useState, useTransition } from "react";
+import { createComment, getCommentsByTask } from "@/lib/action/action-comment";
+import { Comment } from "@prisma/client";
+import moment from "moment";
+
+interface CommentProps {
+  taskId: string | undefined;
+}
+
+interface Author {
+  id: string;
+  name: string | null;
+  image: string | null;
+}
+
+interface CommentWithAuthor extends Comment {
+  author: Author;
+}
+
+const TaskComment = ({ taskId }: CommentProps) => {
+  const { data: session } = useSession();
+
+  const [data, setData] = useState<CommentWithAuthor[]>([]);
+  const [isPending, startTransition] = useTransition();
+
+  const form = useForm<z.infer<typeof commentSchema>>({
+    resolver: zodResolver(commentSchema),
+    defaultValues: {
+      comment: "",
+    },
+  });
+
+  const fetchComments = async () => {
+    try {
+      const comments = await getCommentsByTask(taskId || "");
+
+      console.log({ comments });
+      if (Array.isArray(comments)) {
+        setData(comments);
+        form.reset({ comment: "" });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleOnSubmit = (data: z.infer<typeof commentSchema>) => {
+    const payload = {
+      content: data.comment,
+      taskId: taskId || "",
+    };
+    try {
+      startTransition(async () => {
+        const res = await createComment(payload);
+        if ("id" in res) await fetchComments();
+        form.reset();
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchComments();
+      form.reset({ comment: "" });
+    };
+
+    fetchData();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [taskId, form]);
+
+  return (
+    <div>
+      <div className="h-[400px] overflow-y-scroll p-2">
+        {data &&
+          data.length > 0 &&
+          data.map((comment) => (
+            <div key={comment.id} className="mb-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Avatar>
+                  <Image
+                    src={comment?.author?.image || ""}
+                    alt="Avatar"
+                    width={32}
+                    height={32}
+                    className="rounded-full"
+                  />
+
+                  <AvatarFallback>M</AvatarFallback>
+                </Avatar>
+                <div className="w-full flex items-center gap-4">
+                  <p className="text-sm text-gray-900 capitalize">
+                    {comment?.authorId === session?.user.id
+                      ? "You"
+                      : comment?.author?.name}
+                  </p>
+                  <DeleteButton onDelete={() => {}} text="" />
+                </div>
+                <p className="text-sm text-muted-foreground capitalize text-center">
+                  {moment(comment.createdAt).format("LLL")}
+                </p>
+              </div>
+              <p className="relative text-sm bg-slate-200 p-2 rounded-md w-max before:content-[''] before:absolute before:top-0.5 before:left-2 before:border-8 before:border-transparent before:border-b-slate-200 before:-translate-y-full">
+                {comment.content}
+              </p>
+            </div>
+          ))}
+      </div>
+      <div className="w-full flex gap-2">
+        <Avatar>
+          <Image
+            src={session?.user.image || ""}
+            alt="Avatar"
+            width={32}
+            height={32}
+            className="rounded-full"
+          />
+
+          <AvatarFallback>MO</AvatarFallback>
+        </Avatar>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(handleOnSubmit)}
+            className="flex gap-2 w-full"
+          >
+            <FormField
+              control={form.control}
+              name="comment"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormControl>
+                    <Textarea
+                      placeholder="Add a comment"
+                      {...field}
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" disabled={isPending}>
+              {isPending ? (
+                <FaSpinner className="ml-2 h-4 w-4 animate-spin" />
+              ) : (
+                <FaRegPaperPlane />
+              )}
+            </Button>
+          </form>
+        </Form>
+      </div>
+    </div>
+  );
+};
+
+export default TaskComment;
