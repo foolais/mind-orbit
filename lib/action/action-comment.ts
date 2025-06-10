@@ -22,7 +22,7 @@ export const getCommentsByTask = async (taskId: string) => {
   try {
     const comments = await prisma.comment.findMany({
       where: { taskId },
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: "asc" },
       include: {
         author: {
           select: {
