@@ -69,7 +69,7 @@ const HomePage = async ({ searchParams }: HomePageProps) => {
             {data?.members &&
               data?.members?.map((member) => (
                 <div
-                  key={member.id}
+                  key={member.user.id}
                   className="flex items-center gap-2 bg-muted p-2 rounded-md my-2 w-max capitalize"
                 >
                   <div className="size-4 bg-primary rounded-full" />

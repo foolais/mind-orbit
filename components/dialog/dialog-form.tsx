@@ -6,6 +6,7 @@ import {
   DialogTitle,
 } from "../ui/dialog";
 import DeleteButton from "../button/delete-button";
+import { cn } from "@/lib/utils";
 
 interface DialogFormProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ interface DialogFormProps {
   canDelete?: boolean;
   onDelete?: () => void;
   text?: string;
+  className?: string;
 }
 
 const DialogForm = ({
@@ -27,11 +29,12 @@ const DialogForm = ({
   canDelete = false,
   onDelete = () => {},
   text,
+  className,
 }: DialogFormProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
-        className="sm:max-w-[425px]"
+        className={cn("sm:max-w-[425px] md:max-w-[600px]", className)}
         onInteractOutside={(e) => {
           e.preventDefault();
         }}
@@ -43,7 +46,9 @@ const DialogForm = ({
               <DeleteButton onDelete={onDelete} text={text} />
             )}
           </DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
+          <DialogDescription className="text-left">
+            {description}
+          </DialogDescription>
         </DialogHeader>
         {children}
       </DialogContent>

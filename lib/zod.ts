@@ -23,3 +23,5 @@ export const filterSchema = z.object({
   search: z.string().optional(),
   priority: z.enum(["ALL", "HIGH", "MEDIUM", "LOW"]).optional(),
 });
+
+export const commentSchema = z.object({ comment: z.string() });
