@@ -5,7 +5,7 @@ import { PriorityOptions, StatusOptions } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
 interface HomePageProps {
-  searchParams: { project?: string };
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 }
 
 interface ProjectData {

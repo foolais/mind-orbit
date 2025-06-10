@@ -1,7 +1,7 @@
 import AlertSelectProjectButton from "@/components/button/alert-select-project-button";
 
 interface InvitationPageProps {
-  searchParams: { project?: string };
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 }
 
 const InvitationPage = async ({ searchParams }: InvitationPageProps) => {

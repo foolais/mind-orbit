@@ -8,7 +8,7 @@ import { getTasksByProjectId } from "@/lib/action/action-task";
 import { Task, TaskPriority } from "@prisma/client";
 
 interface TaskPageProps {
-  searchParams: { project?: string; search?: string; priority?: string };
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 }
 
 const TaskPage = async ({ searchParams }: TaskPageProps) => {
