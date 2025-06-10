@@ -68,6 +68,7 @@ model User {
   ProjectMember ProjectMember[]
   Task          Task[]
   Invitations   ProjectInvitation[]
+  Comment       Comment[]
 
   @@map("user")
 }
@@ -120,6 +121,7 @@ model Task {
   dueDate   DateTime?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  Comment   Comment[]
 
   @@map("task")
 }
@@ -140,4 +142,20 @@ model ProjectInvitation {
   expiresAt DateTime
 
   @@map("projectinvitation")
+}
+
+model Comment {
+  id      String @id @default(cuid())
+  content String
+
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id])
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("comment")
 }
